@@ -8,15 +8,13 @@ const Footer = () => {
   const { isAuthorized } = useContext(Context);
   return (
     <footer className={isAuthorized ? "footerShow" : "footerHide"}>
-      <div>&copy; Rahul Sharma's work.</div>
+      <div>&copy; HireHub</div>
       <div>
-        <Link to={"https://github.com/rahul24sharma"} target="_blank">
+        <Link to={"https://github.com/sumanthreddy94/HireHub.git"} target="_blank">
           <FaGithub />
         </Link>
-        <Link to={"https://rahul-sharma-portfolio.vercel.app/"} target="_blank">
-          <FaGlobe />
-        </Link>
-        <Link to={"hhttps://www.linkedin.com/in/rsharma84/"} target="_blank">
+        <Link to={"hhttps://www.linkedin.com/in/"} target="_blank">
+
           <FaLinkedin />
         </Link>
         <Link to={"https://www.instagram.com/"} target="_blank">
