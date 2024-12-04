@@ -14,6 +14,7 @@ const Footer = () => {
           <FaGithub />
         </Link>
         <Link to={"hhttps://www.linkedin.com/in/"} target="_blank">
+
           <FaLinkedin />
         </Link>
         <Link to={"https://www.instagram.com/"} target="_blank">
