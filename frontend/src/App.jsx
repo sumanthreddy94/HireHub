@@ -13,6 +13,8 @@ import MyJobs from "./components/Job/MyJobs";
 import PostJob from "./components/Job/PostJob";
 import Application from "./components/Application/Application";
 import MyApplications from "./components/Application/MyApplications";
+import UserList from "./components/Admin/UserList";
+import AdminDashBoard from "./components/Admin/AdminDashBoard";
 import NotFound from "./components/NotFound/NotFound";
 import axios from "axios";
 import { Toaster } from "react-hot-toast";
@@ -70,6 +72,8 @@ const App = () => {
         <Route path="/job/me" element={<MyJobs />} />
         <Route path="/application/:id" element={<Application />} />
         <Route path="/applications/me" element={<MyApplications />} />
+        <Route path="/users/me" element={<UserList />} />
+        <Route path="/dashboard" element={<AdminDashBoard />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
