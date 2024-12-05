@@ -43,12 +43,17 @@ export const filterApplications = catchAsyncError(async (req, res, next) => {
     filters.date = { $gte: new Date(date) };
   }
 
+  // Log the filters applied
+  console.log("Filters applied:", filters);
+
   const applications = await Application.find(filters);
   res.status(200).json({
     success: true,
     applications,
   });
 });
+
+
 
 export const hireApplication = catchAsyncError(async (req, res, next) => {
   const { id } = req.params;
