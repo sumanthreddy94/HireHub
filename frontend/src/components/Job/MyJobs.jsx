@@ -87,7 +87,7 @@ const MyJobs = () => {
 
   return (
     <>
-<div className="bg-gray-50 py-8 w-11/12 mx-auto h-screen">
+<div className="bg-gray-50 py-8 w-11/12 mx-auto">
   <div className="container mx-auto px-4">
     <h1 className="text-3xl font-semibold text-gray-800 mb-6">
       Your Job Listings
@@ -337,7 +337,7 @@ const MyJobs = () => {
                 ) : (
                   <button
                     onClick={() => handleEnableEdit(element._id)}
-                    className="p-2 bg-blue-500 text-white rounded-md"
+                    className="p-2 bg-blue text-white rounded-md"
                   >
                     Edit
                   </button>

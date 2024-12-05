@@ -1,7 +1,7 @@
 import { FaBuilding, FaSuitcase, FaUsers, FaUserPlus, FaSearch, FaMapPin } from "react-icons/fa";
 import React, { useState } from "react"
 
-const Banner = ({query, handleInputChange}) => {
+const Banner = ({query, handleInputChange, handleLocationChange, location}) => {
   
   return (
     <>
@@ -16,7 +16,7 @@ const Banner = ({query, handleInputChange}) => {
               <FaSearch className="absolute mt-2.5 ml-2 text-gray-400" />
             </div>
             <div className="flex md:rounded-s-none rounded shadow-sm ring-1 ring-inset focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 md:w-1/3 w-full">
-              <input type="text" name="title" id="title" placeholder="Location" className="block flex-1 border-0 bg-transparent py-1 pl-8 placeholder:text-gray-400 focus:right-0 sm:text-sm sm:leading-6" onChange={handleInputChange} value=""/>
+              <input type="text" name="title" id="title" placeholder="Location" className="block flex-1 border-0 bg-transparent py-1 pl-8 placeholder:text-gray-400 focus:right-0 sm:text-sm sm:leading-6" onChange={handleLocationChange} value={location}/>
               <FaMapPin className="absolute mt-2.5 ml-2 text-gray-400" />
             </div>
             <button className="bg-blue py-2 px-8 text-white md:rounded-s-none rounded" type="submit">Search</button>

@@ -19,6 +19,7 @@ const Home = () => {
   const itemsPerPage = 6;
   const navigateTo = useNavigate();
   const dispatch = useDispatch();
+  const [location, setLocation] = useState("");
 
   const { isAuthorized } = useSelector((state) => {
     return state.auth;
@@ -45,6 +46,10 @@ const Home = () => {
   }
   const handleInputChange = (event) => {
     setQuery(event.target.value);
+  };
+
+  const handleLocationChange = (event) => {
+    setLocation(event.target.value); 
   };
   if (!isAuthorized) {
     return <Navigate to={"/login"} />;
@@ -92,8 +97,13 @@ const Home = () => {
         job.title.toLowerCase().includes(query.toLowerCase())
       );
     }
+    if (location) {
+      filteredJobs = filteredJobs.filter((job) =>
+        job.location.toLowerCase().includes(location.toLowerCase())
+      );
+    }
 
-    // Filter by selected category or city/salary
+
     if (selected) {
       filteredJobs = filteredJobs.filter(({ city, salaryTo, category, jobPostedOn, experienceLevel }) => {
         return (
@@ -112,12 +122,13 @@ const Home = () => {
   };
   
 
-  const result = filteredData(jobs, selectedCategory, query);
+  const result = filteredData(jobs, selectedCategory, query, location);
+  console.log(location)
 
   return (
     <>
       <div>
-        <Banner query={query} handleInputChange={handleInputChange} />
+        <Banner query={query} handleInputChange={handleInputChange} handleLocationChange={handleLocationChange} location={location} />
         <div className="bg-[#FAFAFA] md:grid grid-cols-4 gap-8 lg:px-24 px-4 py-12">
         <div className="bg-white p-4 rounded"><Sidebar handleChange={handleChange} handleClick={handleClick}/></div>
         <div className="col-span-2 bg-white p-4 rounded-sm">
