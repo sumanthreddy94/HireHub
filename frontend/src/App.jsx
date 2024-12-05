@@ -21,10 +21,12 @@ const App = () => {
   const { isAuthorized, setIsAuthorized, setUser } = useContext(Context);
 
   useEffect(() => {
+/*************  ✨ Codeium Command ⭐  *************/
   /**
    * Fetches the user details from the backend and sets the user state in the context.
    * If the user is authenticated, sets isAuthorized to true, else sets it to false.
    */
+/******  57c97702-9f7c-4783-b086-ac7c8c14c721  *******/
     const fetchUser = async () => {
       try {
         const response = await axios.get(

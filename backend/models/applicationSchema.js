@@ -16,12 +16,15 @@ const applicationSchema = new mongoose.Schema({
         required: [true, "Please provide your cover letter!"],
     },
 
+
+
     status: {
         type: String,
         enum: ["Pending", "Rejected", "Next Round", "Hired"],
         default: "Pending",
       },
       
+
     phone: {
         type: Number,
         required: [true, "Please provide your phone number!"],
