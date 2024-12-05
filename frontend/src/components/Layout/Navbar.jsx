@@ -57,19 +57,26 @@ const Navbar = () => {
 
 
   const navItems = [
-    {
-      path: "/",
-      title: "Home",
-      icon: <FaHome />,
-    },
+    
     {
       path: "/dashboard",
       title: "Dashboard",
+      icon: <FaHome />,
+      role: "Admin",
+    },
+    {
+      path: "/users/me",
+      title: "Users",
       icon: <FaList />,
       role: "Admin",
     },
     // Other nav items only appear for non-Admin users
     ...(user && user.role !== "Admin" ? [
+      {
+        path: "/",
+        title: "Home",
+        icon: <FaHome />,
+      },
       {
         path: "/job/getall",
         title: "Jobs",
