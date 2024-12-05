@@ -34,18 +34,14 @@ export const filterApplications = catchAsyncError(async (req, res, next) => {
     );
   }
 
-  
-  
-
-  // Extract filter criteria from query params
-  const { status, date } = req.query;
+  const { jobId, status } = req.query;
   const filters = { "employerID.user": req.user._id };
 
+  if (jobId) {
+    filters["jobId"] = jobId;
+  }
   if (status) {
     filters.status = status;
-  }
-  if (date) {
-    filters.date = { $gte: new Date(date) };
   }
 
   const applications = await Application.find(filters);
@@ -54,6 +50,7 @@ export const filterApplications = catchAsyncError(async (req, res, next) => {
     applications,
   });
 });
+
 
 export const hireApplication = catchAsyncError(async (req, res, next) => {
   const { id } = req.params;
