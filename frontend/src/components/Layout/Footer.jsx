@@ -1,11 +1,14 @@
 import React, { useContext } from "react";
-import { Context } from "../../main";
 import { Link } from "react-router-dom";
 import {  FaLinkedin, FaGithub, FaGlobe } from "react-icons/fa";
 import { RiInstagramFill } from "react-icons/ri";
+import { useSelector } from "react-redux"
 
 const Footer = () => {
-  const { isAuthorized } = useContext(Context);
+  
+  const { isAuthorized } = useSelector((state) => {
+    return state.auth;
+  });
   return (
     <footer className={isAuthorized ? "footerShow" : "footerHide"}>
       <div>&copy; HireHub</div>

@@ -1,14 +1,16 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
+import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom";
-import { Context } from "../../main";
 const JobDetails = () => {
   const { id } = useParams();
   const [job, setJob] = useState({});
   const navigateTo = useNavigate();
 
-  const { isAuthorized, user } = useContext(Context);
+  const { isAuthorized, user } = useSelector((state) => {
+    return state.auth;
+  });
 
   useEffect(() => {
     axios
@@ -21,6 +23,7 @@ const JobDetails = () => {
       })
       .catch((error) => {
         navigateTo("/notfound");
+        console.log(error)
       });
   }, []);
 
@@ -29,62 +32,70 @@ const JobDetails = () => {
   }
 
   return (
-    <section className="jobDetail page">
-      <div className="container">
-        <h3>POSITION OVERVIEW</h3>
-        <div className="banner">
-        <p>
-        {/* Logo: <span> {job.companyLogo && <img src={job.companyLogo} alt="Company Logo" style={{ width: '100px', height: 'auto' }} />}</span> */}
+<section className="bg-gray-50 py-8 w-11/12 mx-auto">
+  <div className="container mx-auto px-4">
+    <h3 className="text-3xl font-semibold text-gray-800 mb-6">POSITION OVERWIEW</h3>
+    
+    <div className="bg-white shadow-lg rounded-lg p-6">
+      {/* Company Logo */}
+      <div className="flex items-center space-x-4 mb-6">
         {job.companyLogo?.path && (
-  <img
-    src={`http://localhost:4000/${job.companyLogo.path}`}
-    width="100"
-    height="100"
-    alt={`${job.companyName} Logo`}
-  />
-)}
-
-        </p>
-          <p>
-            Title: <span> {job.title}</span>
-          </p>
-          <p>
-            Category: <span>{job.category}</span>
-          </p>
-          <p>
-            Country: <span>{job.country}</span>
-          </p>
-          <p>
-            City: <span>{job.city}</span>
-          </p>
-          <p>
-            Location: <span>{job.location}</span>
-          </p>
-          <p>
-            Description: <span>{job.description}</span>
-          </p>
-          <p>
-            Job Posted On: <span>{job.jobPostedOn}</span>
-          </p>
-          <p>
-            Salary:{" "}
-            {job.fixedSalary ? (
-              <span>{job.fixedSalary}</span>
-            ) : (
-              <span>
-                {job.salaryFrom} - {job.salaryTo}
-              </span>
-            )}
-          </p>
-          {user && user.role === "Employer" ? (
-            <></>
-          ) : (
-            <Link to={`/application/${job._id}`}>Apply Now</Link>
-          )}
+          <img
+            src={`http://localhost:4000/${job.companyLogo.path}`}
+            alt={`${job.companyName} Logo`}
+            className="w-24 h-24 object-contain"
+          />
+        )}
+        <div>
+          <p className="text-xl font-medium text-gray-800">{job.companyName}</p>
         </div>
       </div>
-    </section>
-  );
-};
+      
+      <div className="space-y-4">
+        <p className="text-lg text-gray-700">
+          <span className="font-semibold">Title:</span> {job.title}
+        </p>
+        <p className="text-lg text-gray-700">
+          <span className="font-semibold">Category:</span> {job.category}
+        </p>
+        <p className="text-lg text-gray-700">
+          <span className="font-semibold">Country:</span> {job.country}
+        </p>
+        <p className="text-lg text-gray-700">
+          <span className="font-semibold">City:</span> {job.city}
+        </p>
+        <p className="text-lg text-gray-700">
+          <span className="font-semibold">Location:</span> {job.location}
+        </p>
+        <p className="text-lg text-gray-700">
+          <span className="font-semibold">Description:</span> {job.description}
+        </p>
+        <p className="text-lg text-gray-700">
+          <span className="font-semibold">Job Posted On:</span> {job.jobPostedOn}
+        </p>
+        <p className="text-lg text-gray-700">
+          <span className="font-semibold">Salary:</span> 
+          {job.fixedSalary ? (
+            <span>{job.fixedSalary}</span>
+          ) : (
+            <span>{job.salaryFrom} - {job.salaryTo}</span>
+          )}
+        </p>
+        
+        {/* Apply Now button */}
+        {user && user.role === "Employer" ? null : (
+          <Link
+            to={`/application/${job._id}`}
+            className="inline-block bg-blue text-white py-2 px-6 rounded-md text-lg font-medium hover:bg-blue-700 transition duration-300"
+          >
+            Apply Now
+          </Link>
+        )}
+      </div>
+    </div>
+  </div>
+</section>
+  )
+}
 
-export default JobDetails;
+export default JobDetails

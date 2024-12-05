@@ -1,25 +1,17 @@
-import React from "react";
-import { CssVarsProvider } from "@mui/joy/styles";
 import { useState, useContext } from "react";
-import Sheet from "@mui/joy/Sheet";
-import Typography from "@mui/joy/Typography";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/joy/FormLabel";
-import Input from "@mui/joy/Input";
-import Button from "@mui/joy/Button";
-import Link from "@mui/joy/Link";
-import { Context } from "../../main";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Navigate } from "react-router-dom";
-import Select from "@mui/joy/Select";
-import Option from "@mui/joy/Option";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { EarthCanvas, StarsCanvas } from "../Canvas/index";
 import { motion } from "framer-motion";
 import { slideIn } from "../Auth/motion";
 import { styles } from "./styles";
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from "react-redux";
+import { setAuth } from "../redux/authSlice"
+import { useSelector } from "react-redux"
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -29,8 +21,13 @@ const Register = () => {
   const [role, setRole] = useState("");
   const [type, setType] = useState("password");
   const [icon, setIcon] = useState(faEye);
-  const { isAuthorized, setIsAuthorized } = useContext(Context);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { isAuthorized } = useSelector((state) => {
+    return state.auth;
+  });
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -42,28 +39,32 @@ const Register = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          withCredentials: true,
+          withCredentials: true, // Ensure this is true
         }
       );
-      toast.success(data.message);
-      setName("");
-      setEmail("");
-      setPassword("");
-      setPhone("");
-      setRole("");
-      setIsAuthorized(true);
+  
+      console.log("Full registration response:", data);
+      console.log("Received token:", data.token);
+      console.log("Received user:", data.user);
+      console.log("Received role:", data.user.role);
+  
+    
+  
+      dispatch(setAuth({ 
+        token: data.token, 
+        user: data.user, 
+        role: data.user.role 
+      }));
+  
+      // Ensure localStorage is set
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('role', data.user.role);
+      localStorage.setItem('loggedIn', 'true');
+  
+      navigate("/");
     } catch (error) {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        toast.error(error.response.data.message);
-      } else if (error.request) {
-        // The request was made but no response was received
-        toast.error("No response from server. Please try again later.");
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        toast.error("An error occurred. Please try again.");
-      }
+      console.error("Registration Error:", error.response?.data || error.message);
+      toast.error(error.response?.data?.message || "Registration failed");
     }
   };
 
@@ -78,6 +79,7 @@ const Register = () => {
   };
 
   if (isAuthorized) {
+    console.log(isAuthorized)
     return <Navigate to={"/"} />;
   }
   return (
@@ -160,6 +162,7 @@ const Register = () => {
             />
           </label>
           <button
+          
             onClick={handleRegister}
             type="submit"
             className="py-3 px-8 rounded-xl outline-none w-fit text-black font-bold shadow-md shadow-primary hover:bg-tertiary transition-colors bg-white"

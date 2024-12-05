@@ -1,5 +1,4 @@
 import React, { useContext, useState, useEffect } from "react";
-import { Context } from "../../main";
 import { Navigate } from "react-router-dom";
 import Banner from "./Banner";
 import axios from "axios";
@@ -8,9 +7,10 @@ import JobsLayout from "../Pages/JobsLayout";
 import Card from "../Home/Card";
 import Sidebar from "./Sidebar";
 import NewsLetter from "./NewsLetter";
+import { useDispatch, useSelector } from "react-redux"
+import { setAuth, logout } from "../redux/authSlice";
 
 const Home = () => {
-  const { isAuthorized } = useContext(Context);
   const [query, setQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [jobs, setJobs] = useState([]);
@@ -18,6 +18,11 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 6;
   const navigateTo = useNavigate();
+  const dispatch = useDispatch();
+
+  const { isAuthorized } = useSelector((state) => {
+    return state.auth;
+  });
   useEffect(() => {
     try {
       setIsLoading(true)
@@ -33,8 +38,10 @@ const Home = () => {
       console.log(error);
     }
   }, []);
+
+
   if (!isAuthorized) {
-    navigateTo("/");
+    return <Navigate to="/login" />;
   }
   const handleInputChange = (event) => {
     setQuery(event.target.value);
