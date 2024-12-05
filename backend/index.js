@@ -54,17 +54,16 @@ dotenv.config();
 
 import express from 'express';
 
-const app = express();
-app.use(express.json());
-app.use(cookieParser());
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+let capp = express();capp.use(express.json());
+capp.use(cookieParser());
+capp.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
-app.use("/api/v1/applications", applicationRouter);
+capp.use("/api/v1/applications", applicationRouter);
 
-app.use(errorMiddleware);
+capp.use(errorMiddleware);
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
+capp.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
  
