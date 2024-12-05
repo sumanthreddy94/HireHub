@@ -2,18 +2,115 @@ import { catchAsyncError } from "../middlewares/catchAsyncError.js";
 import ErrorHandler from "../middlewares/error.js";
 import { Application } from "../models/applicationSchema.js";
 import { Job } from "../models/jobSchema.js";
-import upload from "../config/multerConfig.js"
 
-// Get all applications for a job seeker
+export const employerGetAllApplications = catchAsyncError(
+  async (req, res, next) => {
+    const { role } = req.user;
+    if (role === "Job Seeker") {
+      return next(
+        new ErrorHandler(
+          "Job Seekers are not allowed to access this resource!",
+          400
+        )
+      );
+    }
+    const { _id } = req.user;
+    const applications = await Application.find({ "employerID.user": _id });
+    res.status(200).json({
+      success: true,
+      applications,
+    });
+  }
+);
+
+
+
+export const filterApplications = catchAsyncError(async (req, res, next) => {
+  const { role } = req.user;
+
+  if (role === "Job Seeker") {
+    return next(
+      new ErrorHandler("Job Seekers are not allowed to access this resource!", 400)
+    );
+  }
+
+  const { jobId, status } = req.query;
+  const filters = { "employerID.user": req.user._id };
+
+  if (jobId) {
+    filters["jobId"] = jobId;
+  }
+  if (status) {
+    filters.status = status;
+  }
+
+  const applications = await Application.find(filters);
+  res.status(200).json({
+    success: true,
+    applications,
+  });
+});
+
+
+export const hireApplication = catchAsyncError(async (req, res, next) => {
+  const { id } = req.params;
+
+  const application = await Application.findById(id);
+  if (!application) {
+    return next(new ErrorHandler("Application not found", 404));
+  }
+
+  application.status = "Hired";
+  await application.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Application marked as hired!",
+  });
+});
+
+
+export const rejectApplication = catchAsyncError(async (req, res, next) => {
+  const { id } = req.params;
+
+  const application = await Application.findById(id);
+  if (!application) {
+    return next(new ErrorHandler("Application not found.", 404));
+  }
+
+  application.status = "Rejected";
+  await application.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Application has been rejected.",
+  });
+});
+
+export const moveToNextRound = catchAsyncError(async (req, res, next) => {
+  const { id } = req.params;
+
+  const application = await Application.findById(id);
+  if (!application) {
+    return next(new ErrorHandler("Application not found.", 404));
+  }
+
+  application.status = "Next Round";
+  await application.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Application moved to the next round.",
+  });
+});
+
+
 export const jobSeekerGetAllApplications = catchAsyncError(
   async (req, res, next) => {
     const { role } = req.user;
     if (role === "Employer") {
       return next(
-        new ErrorHandler(
-          "Employer are not allowed to access this resource!",
-          400
-        )
+        new ErrorHandler("Employers are not allowed to access this resource!", 400)
       );
     }
     const { _id } = req.user;
@@ -25,16 +122,12 @@ export const jobSeekerGetAllApplications = catchAsyncError(
   }
 );
 
-// Delete application
 export const jobSeekerDeleteApplication = catchAsyncError(
   async (req, res, next) => {
     const { role } = req.user;
     if (role === "Employer") {
       return next(
-        new ErrorHandler(
-          "Employer are not allowed to access this resource!",
-          400
-        )
+        new ErrorHandler("Employers are not allowed to access this resource!", 400)
       );
     }
     const { id } = req.params;
@@ -50,40 +143,26 @@ export const jobSeekerDeleteApplication = catchAsyncError(
   }
 );
 
-// Submit new application
 export const postApplication = catchAsyncError(async (req, res, next) => {
   try {
-    // Log the request URL
-    console.log('Request URL:', req.originalUrl);
-    
-    // Log the request body and uploaded file
-    console.log('Request body:', req.body);
-    console.log('Uploaded file:', req.file);
-
-    // Check user role
     const { role } = req.user;
     if (role === "Employer") {
-      return next(new ErrorHandler("Employers are not allowed to access this resource!", 400));
+      return next(
+        new ErrorHandler("Employers are not allowed to access this resource!", 400)
+      );
     }
 
-    // Ensure file upload
-    if (!req.file) {
-      return next(new ErrorHandler("Resume file is required!", 400));
-    }
-
-    // Extract fields from request body
     const { name, email, coverLetter, phone, address, jobId } = req.body;
+
     if (!name || !email || !coverLetter || !phone || !address || !jobId) {
       return next(new ErrorHandler("Please fill all fields!", 400));
     }
 
-    // Check if job exists
     const jobDetails = await Job.findById(jobId);
     if (!jobDetails) {
       return next(new ErrorHandler("Job not found!", 404));
     }
 
-    // Define applicant and employer IDs
     const applicantID = {
       user: req.user._id,
       role: "Job Seeker",
@@ -94,13 +173,11 @@ export const postApplication = catchAsyncError(async (req, res, next) => {
       role: "Employer",
     };
 
-    // Save resume details
     const resume = {
       path: req.file.path,
       filename: req.file.filename,
     };
 
-    // Create application
     const application = await Application.create({
       name,
       email,
@@ -112,38 +189,18 @@ export const postApplication = catchAsyncError(async (req, res, next) => {
       resume,
     });
 
-    // Respond with success
     res.status(200).json({
       success: true,
       message: "Application submitted successfully!",
       application,
     });
   } catch (error) {
-    console.error('Error in postApplication:', error);
-    next(new ErrorHandler("An error occurred while submitting your application. Please try again.", 500));
+    console.error("Error in postApplication:", error);
+    next(
+      new ErrorHandler(
+        "An error occurred while submitting your application. Please try again.",
+        500
+      )
+    );
   }
-});
-
-// Get single application details
-export const getApplicationDetails = catchAsyncError(async (req, res, next) => {
-  const { role } = req.user;
-  if (role === "Employer") {
-    return next(new ErrorHandler("Employers are not allowed to access this resource!", 400));
-  }
-
-  const application = await Application.findById(req.params.id);
-  
-  if (!application) {
-    return next(new ErrorHandler("Application not found", 404));
-  }
-
-  // Verify the application belongs to the requesting user
-  if (application.applicantID.user.toString() !== req.user._id.toString()) {
-    return next(new ErrorHandler("Unauthorized to access this application", 403));
-  }
-
-  res.status(200).json({
-    success: true,
-    application,
-  });
 });
