@@ -6,7 +6,7 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
 import Button from "@mui/joy/Button";
-import { Context } from "../../main";
+import { useSelector } from "react-redux"
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
@@ -20,8 +20,9 @@ const Application = () => {
   const [address, setAddress] = useState("");
   const [resume, setResume] = useState(null);
 
-  const { isAuthorized, user } = useContext(Context);
-
+  const { isAuthorized, user } = useSelector((state) => {
+    return state.auth;
+  });
   const navigateTo = useNavigate();
 
   // Function to handle file input changes

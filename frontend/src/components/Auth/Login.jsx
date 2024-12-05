@@ -1,15 +1,17 @@
-import  {  useState, useContext } from "react";
+import  {  useState,useEffect, useContext } from "react";
 import { motion } from "framer-motion";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { styles } from "./styles";
 import { EarthCanvas, StarsCanvas } from "../Canvas/index";
 import { slideIn } from "../Auth/motion";
 import toast from "react-hot-toast";
-import { Context } from "../../main";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+import { useDispatch } from "react-redux";
+import { setAuth } from "../redux/authSlice"
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux"
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,9 +19,12 @@ const Login = () => {
   const [type, setType] = useState("password");
   const [icon, setIcon] = useState(faEye);
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const { isAuthorized, setIsAuthorized } = useContext(Context);
-
+  const { isAuthorized, user } = useSelector((state) => {
+    return state.auth;
+  });
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -34,17 +39,31 @@ const Login = () => {
           withCredentials: true,
         }
       );
-      toast.success(data.message);
+
+      const { token, userRole, user } = data;
+
+      dispatch(setAuth({ token, role: userRole, user }));
+      if (user.role === "Employer" || user.role === "Job Seeker") {
+        console.log(`Navigating for ${user.role} role`);
+        navigate("/"); // Redirect to home page
+      }
+      window.localStorage.setItem("role", data.user.role)
+     
+      toast.success("Login successful!");
       setEmail("");
       setPassword("");
       setRole("");
-      setIsAuthorized(true);
+
       setLoading(false);
     } catch (error) {
       toast.error(error.response.data.message);
       setLoading(false);
     }
   };
+
+
+
+  
 
   const handleToggle = () => {
     if (type === "password") {
@@ -63,7 +82,7 @@ const Login = () => {
 
   return (
     <div
-      className={` h-screen w-screen xl:mt-0 flex xl:flex-row flex-col-reverse gap-10 overflow-hidden relative`}
+      className={` w-screen xl:mt-0 flex xl:flex-row flex-col-reverse gap-10 overflow-hidden relative`}
     >
       <StarsCanvas />
       <motion.div
@@ -71,7 +90,7 @@ const Login = () => {
         className="flex-[0.75] p-8 rounded-2xl z-10 relative"
       >
         <p className={styles.sectionSubText}>Welcome Back</p>
-        <h3 style = {{color:"black"}} className={styles.sectionHeadText}>Sign in.</h3>
+        <h3 className={styles.sectionHeadText}>Sign in.</h3>
 
         <form className="mt-12 flex flex-col gap-8">
           <label className="flex flex-col">

@@ -9,12 +9,12 @@ import { useContext, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { Context } from "../../main";
 import Select from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
 import { Grid } from "@mui/material";
 import Textarea from "@mui/joy/Textarea";
 import React from "react";
+import { useSelector } from "react-redux"
 
 const PostJob = () => {
   const [companyName, setCompanyName] = useState("");
@@ -33,8 +33,9 @@ const PostJob = () => {
   const [experienceLevel, setExperienceLevel] = useState("");
   const [employmentType, setEmploymentType] = useState("");
 
-  const { isAuthorized, user } = useContext(Context);
-
+  const { isAuthorized, user } = useSelector((state) => {
+    return state.auth;
+  });
   const handleJobPost = async (e) => {
     e.preventDefault();
 

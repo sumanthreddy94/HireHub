@@ -1,16 +1,17 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Context } from "../../main";
+import  { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { useSelector } from "react-redux"
 import toast from "react-hot-toast";
-import { Navigate, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import ResumeModal from "./ResumeModel"; // Make sure to include this import
-
+import Spinner from 'react-bootstrap/Spinner'; 
 const MyApplications = () => {
-  const { user } = useContext(Context);
   const [applications, setApplications] = useState([]);
-  const { isAuthorized } = useContext(Context);
-  const [modalOpen, setModalOpen] = useState(false);
+  const { isAuthorized, user } = useSelector((state) => {
+    return state.auth;
+  });  const [modalOpen, setModalOpen] = useState(false);
   const [resumeImageUrl, setResumeImageUrl] = useState("");
+  const [loading, setLoading] = useState(true);
   const navigateTo = useNavigate();
 
   useEffect(() => {
@@ -22,9 +23,11 @@ const MyApplications = () => {
         .then((res) => {
           console.log(res.data.applications);
           setApplications(res.data.applications);
+          setLoading(false);
         })
         .catch((error) => {
           toast.error(error.response.data.message);
+          setLoading(false);
         });
     } else {
       axios
@@ -34,16 +37,18 @@ const MyApplications = () => {
         .then((res) => {
           console.log(res.data.applications);
           setApplications(res.data.applications);
+          setLoading(false);
         })
         .catch((error) => {
           toast.error(error.response.data.message);
+          setLoading(false);
         });
     }
   }, [isAuthorized, user]);
 
   if (!isAuthorized) {
     navigateTo("/");
-    return null; // Prevent rendering while redirecting
+    return null; 
   }
 
   const deleteApplication = (id) => {
@@ -74,7 +79,11 @@ const MyApplications = () => {
 
   return (
     <section className="my_applications page">
-      {user && user.role === "Job Seeker" ? (
+      {loading ? (
+        <div className="flex justify-center items-center py-12">
+          <Spinner animation="border" variant="primary" />
+        </div>
+      ) : user && user.role === "Job Seeker" ? (
         <div className="container">
           <h1>My Applications</h1>
           {applications.length <= 0 ? (
@@ -89,7 +98,7 @@ const MyApplications = () => {
                   key={element._id}
                   deleteApplication={deleteApplication}
                   openModal={openModal}
-                  applications={applications} // Pass applications to JobSeekerCard
+                  applications={applications} 
                 />
               );
             })
@@ -109,7 +118,7 @@ const MyApplications = () => {
                   element={element}
                   key={element._id}
                   openModal={openModal}
-                  applications={applications} // Pass applications to EmployerCard
+                  applications={applications} 
                 />
               );
             })
@@ -150,7 +159,6 @@ const JobSeekerCard = ({ element, deleteApplication, openModal, applications }) 
         </p>
       </div>
       <div className="resume">
-        {/* Map through applications to display resumes */}
         {applications
           .filter((app) => app._id === element._id)
           .map((application) => (

@@ -19,12 +19,8 @@ export const register = catchAsyncError(async (req, res, next) => {
     phone,
     role,
   });
-  res.status(200).json({
-      success: true,
-      message: "User registered sucessfully!",
-      user,
-  })
-  sendToken(user, 200, "User Registered Successfully!")
+
+  sendToken(user, 200, res, "User Registered Successfully!")
 });
 
 export const login = catchAsyncError(async(req, res, next) => {

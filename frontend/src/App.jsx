@@ -1,7 +1,6 @@
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 import "./App.css";
 import  { useEffect, useContext } from "react";
-import { Context } from "./main";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
@@ -17,32 +16,44 @@ import MyApplications from "./components/Application/MyApplications";
 import NotFound from "./components/NotFound/NotFound";
 import axios from "axios";
 import { Toaster } from "react-hot-toast";
+import { setAuth, logout } from './components/redux/authSlice';
+import { useDispatch, useSelector } from "react-redux"
 const App = () => {
-  const { isAuthorized, setIsAuthorized, setUser } = useContext(Context);
 
+  const dispatch = useDispatch();
+  const isLoggedIn = localStorage.getItem("loggedIn");
+  const role = localStorage.getItem("role");
+
+  const { isAuthorized } = useSelector((state) => {
+    return state.auth;
+  });
   useEffect(() => {
-/*************  ✨ Codeium Command ⭐  *************/
-  /**
-   * Fetches the user details from the backend and sets the user state in the context.
-   * If the user is authenticated, sets isAuthorized to true, else sets it to false.
-   */
-/******  57c97702-9f7c-4783-b086-ac7c8c14c721  *******/
-    const fetchUser = async () => {
+    const getUser = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:4000/api/v1/user/getuser",
-          {
-            withCredentials: true,
-          }
-        );
-        setUser(response.data.user);
-        setIsAuthorized(true);
+        const response = await axios.get("http://localhost:4000/api/v1/user/getuser", {
+          withCredentials: true,
+        });
+        const { user, role } = response.data;
+        console.log(response.data)
+        if (user) {
+          console.log(role)
+          dispatch(setAuth({ user, role }));
+          window.localStorage.setItem("loggedIn", true)
+
+        } else {
+          dispatch(logout());
+          localStorage.removeItem("token")
+          localStorage.removeItem("loggedIn")
+        }
       } catch (error) {
-        setIsAuthorized(false);
+        console.error("No user is logged In right now!");
+        dispatch(logout());
+        window.localStorage.setItem("loggedIn", false)
       }
     };
-    fetchUser();
-  }, [isAuthorized]);
+
+    getUser();
+  }, [dispatch, isAuthorized]);
 
 
 
