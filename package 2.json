@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "moment-timezone": "^0.5.46",
-    "react-router-dom": "^7.0.2"
-  }
-}
