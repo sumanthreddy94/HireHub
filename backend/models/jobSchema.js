@@ -36,6 +36,12 @@ const jobSchema = new mongoose.Schema({
     minLength: [3, "experienceLevel must contain atleast 3 characters!"],
     maxLength: [50, "experienceLevel cannot exceed 50 characters!"],
   },
+  employmentType: {
+    type: String,
+    required: [true, "Please provide employment type"],
+    minLength: [3, "employment type must contain atleast 3 characters!"],
+    maxLength: [50, "employment type cannot exceed 50 characters!"],
+  },
   category: {
     type: String,
     required: [true, "Job category is required!"],
