@@ -14,19 +14,20 @@ const EmployerApplications = () => {
   const fetchApplications = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:4000/api/v1/applications/employer/getall",
-        {
-          params: filters,
-          withCredentials: true,
-        }
+        "http://localhost:4000/api/v1/applications/filter",
+        { params: filters, withCredentials: true }
       );
       setApplications(response.data.applications);
     } catch (error) {
-      console.error("Error fetching applications:", error);
+      console.error("Error fetching filtered applications:", error);
     } finally {
       setIsLoading(false);
     }
   };
+  
+
+  
+
 
   const handleAction = async (id, action) => {
     const urlMap = {
@@ -42,6 +43,14 @@ const EmployerApplications = () => {
       console.error(`Error performing ${action} action:`, error);
     }
   };
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters({ ...filters, [name]: value });
+  };
+
+ 
+
 
   if (isLoading) return <p>Loading applications...</p>;
 
