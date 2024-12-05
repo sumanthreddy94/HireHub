@@ -39,7 +39,7 @@ const JobDetails = () => {
     <div className="bg-white shadow-lg rounded-lg p-6">
       {/* Company Logo */}
       <div className="flex items-center space-x-4 mb-6">
-        {job.companyLogo?.path && (
+      {job.companyLogo?.path && (
           <img
             src={`http://localhost:4000/${job.companyLogo.path}`}
             alt={`${job.companyName} Logo`}

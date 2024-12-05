@@ -10,6 +10,21 @@ export const register = catchAsyncError(async (req, res, next) => {
   if (!name || !email || !password || !phone || !role) {
     return next(new ErrorHandler("Please fill full registration form!"));
   }
+
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  if (!passwordRegex.test(password)) {
+    return next(new ErrorHandler("Password must be at least 8 characters long, with at least one uppercase letter, one lowercase letter, one digit, and one special character"));
+  }
+
+  const phoneRegex = /^[0-9]{10}$/; 
+  if (!phoneRegex.test(phone)) {
+    return next(
+      new ErrorHandler(
+        "Phone number must be exactly 10 digits long and contain only numbers."
+      )
+    );
+  }
+
   const isEmail = await User.findOne({ email });
   if (isEmail) {
     return next(new ErrorHandler("Email already exist!"));
