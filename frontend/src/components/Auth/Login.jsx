@@ -129,10 +129,10 @@ const Login = () => {
           </button>
 
           <div className="flex justify-between text-sm">
-            <a href="/register" className="text-white hover:underline">
+            <a href="/register" className="text-black hover:underline">
               Don't have an account? Register
             </a>
-            <a href="/forget" className="text-white hover:underline">
+            <a href="/forget" className="text-black hover:underline">
               Forget Password?
             </a>
           </div>
