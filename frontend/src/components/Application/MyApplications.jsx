@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import {  useNavigate } from "react-router-dom";
 import ResumeModal from "./ResumeModel"; // Make sure to include this import
 import Spinner from 'react-bootstrap/Spinner'; 
+import DeleteConfirm from "../Common/DeleteConfirm";
 const MyApplications = () => {
   const [applications, setApplications] = useState([]);
   const { isAuthorized, user } = useSelector((state) => {
@@ -176,13 +177,17 @@ const JobSeekerCard = ({ element, deleteApplication, openModal, applications }) 
           ))}
       </div>
       <div className="btn_area">
-      <button
+      {/* <button
   onClick={() => deleteApplication(element._id)}
   className=" mx-5 px-4 py-2 bg-red-600 text-white  font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 transition duration-200"
 >
   Delete Application
-</button>
-
+</button> */}
+<DeleteConfirm
+              message={`Are you sure you want to delete ${element.name}?`}
+              onConfirm={() => deleteApplication(element._id)}
+              deleteButtonName={`Delete Application`}
+            />
       </div>
     </div>
   );

@@ -46,6 +46,9 @@ const Login = () => {
       if (user.role === "Employer" || user.role === "Job Seeker") {
         console.log(`Navigating for ${user.role} role`);
         navigate("/"); // Redirect to home page
+      } else {
+        console.log(`Navigating for ${user.role} role`);
+        navigate("/dashboard")
       }
       window.localStorage.setItem("role", data.user.role)
      
@@ -104,6 +107,7 @@ const Login = () => {
               <option value="">Select Role</option>
               <option value="Employer">Employer</option>
               <option value="Job Seeker">Job Seeker</option>
+              <option value="Admin">Admin</option>
             </select>
           </label>
 
