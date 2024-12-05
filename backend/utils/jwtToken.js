@@ -1,7 +1,6 @@
 export const sendToken = (user, statusCode, res, message) => {
   const token = user.getJWTToken();
-  console.log("Token received:", token);
-  const expiresIn = 5 * 24 * 60 * 60 * 1000; // 5 days in milliseconds
+  const expiresIn = 5 * 24 * 60 * 60 * 1000; 
   const options = {
     expires: new Date(Date.now() + expiresIn),
     httpOnly: true,

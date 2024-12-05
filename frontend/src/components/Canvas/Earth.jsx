@@ -8,7 +8,6 @@ const Earth = () => {
   const earth = useGLTF("./planet/scene.gltf");
 
   useFrame((state, delta) => {
-    // Manually rotate the earth around its Y-axis
     if (earthRef.current) {
       earthRef.current.rotation.y += 0.5 * delta;
     }
@@ -29,7 +28,7 @@ const EarthCanvas = () => {
   return (
     <Canvas
       shadows
-      frameloop='always' // Change from 'demand' to 'always'
+      frameloop='always' 
       dpr={[1, 2]}
       gl={{ preserveDrawingBuffer: true }}
       camera={{

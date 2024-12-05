@@ -29,8 +29,37 @@ const Register = () => {
     return state.auth;
   });
 
+  const validateFields = () => {
+    if (!email || !name || !phone || !password || !role) {
+      toast.error("All fields are required");
+      return false;
+    }
+  
+    if (!/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(email)) {
+      toast.error("Invalid email format");
+      return false;
+    }
+  
+    if (!/^\d{10}$/.test(phone)) {
+      toast.error("Phone number must be 10 digits");
+      return false;
+    }
+  
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters long");
+      return false;
+    }
+  
+    return true;
+  };
+  
+
   const handleRegister = async (e) => {
     e.preventDefault();
+
+    if (!validateFields()) {
+      return;
+    }
     try {
       const { data } = await axios.post(
         "http://localhost:4000/api/v1/user/register",

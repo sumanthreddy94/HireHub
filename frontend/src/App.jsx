@@ -61,8 +61,8 @@ const App = () => {
 
   return (
     <Router>
-      <Navbar />
-      <Routes>
+        <Navbar isLoggedIn={isAuthorized} />
+        <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<Home />} />
@@ -74,6 +74,7 @@ const App = () => {
         <Route path="/applications/me" element={<MyApplications />} />
         <Route path="/users/me" element={<UserList />} />
         <Route path="/dashboard" element={<AdminDashBoard />} />
+        
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
