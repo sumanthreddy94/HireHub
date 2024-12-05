@@ -168,9 +168,13 @@ const JobSeekerCard = ({ element, deleteApplication, openModal, applications }) 
           ))}
       </div>
       <div className="btn_area">
-        <button onClick={() => deleteApplication(element._id)}>
-          Delete Application
-        </button>
+      <button
+  onClick={() => deleteApplication(element._id)}
+  className=" mx-5 px-4 py-2 bg-red-600 text-white  font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 transition duration-200"
+>
+  Delete Application
+</button>
+
       </div>
     </div>
   );

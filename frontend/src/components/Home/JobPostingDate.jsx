@@ -10,7 +10,6 @@ const JobPostingData = ({handleChange}) => {
     const twentyFourHoursAgoDate = twentyFourHoursAgo.toISOString().slice(0, 10)
     const sevenDaysAgoDate = sevenDaysAgo.toISOString().slice(0, 10)
     const thirtyDaysAgoDate = thirtyDaysAgo.toISOString().slice(0, 10)
-    console.log(twentyFourHoursAgoDate)
 
   return (
     <div>

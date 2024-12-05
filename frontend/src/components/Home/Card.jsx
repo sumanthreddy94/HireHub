@@ -16,6 +16,7 @@ const Card = ({ data }) => {
     salaryFrom,
     salaryTo,
     jobPostedOn,
+    _id
   } = data;
 
   const formattedDate = new Date(jobPostedOn).toLocaleDateString("en-US", {
@@ -26,7 +27,7 @@ const Card = ({ data }) => {
 
   return (
     <section className="card">
-      <Link to="/" className="flex gap-4 flex-col sm:flex-row items-start">
+      <Link  to={`/job/${_id}`} className="flex gap-4 flex-col sm:flex-row items-start">
         {companyLogo?.path && (
           <img
             src={`http://localhost:4000/${companyLogo.path}`}

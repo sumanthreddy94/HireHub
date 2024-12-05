@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import JobsLayout from "../Pages/JobsLayout";
 import Card from "../Home/Card";
 import Sidebar from "./Sidebar";
+import NewsLetter from "./NewsLetter";
 
 const Home = () => {
   const { isAuthorized } = useContext(Context);
@@ -130,7 +131,7 @@ const Home = () => {
             ) : ""
           }
         </div>
-        <div className="bg-white p-4 rounded">right</div>
+        <div className="bg-white p-4 rounded"><NewsLetter/></div>
         </div>
       </div>
     </>

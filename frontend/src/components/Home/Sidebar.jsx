@@ -17,11 +17,6 @@ const Sidebar = ({handleChange, handleClick}) => {
             <Salary handleChange={handleChange} handleClick={handleClick} />
             <JobPostingData handleChange={handleChange}/>
             <WorkExperience handleChange={handleChange} />
-
-
-            <Link to="/">Home</Link>
-      <Link to="/employer/applications">Job Applications</Link>
-
     </div>
   )
 }
