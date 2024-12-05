@@ -4,7 +4,6 @@ import { Sky, Cloud, Preload } from "@react-three/drei";
 
 const getSkyColor = () => {
   const currentHour = new Date().getHours();
-  console.log(currentHour)
 
  if (currentHour >= 22 || currentHour < 4) {
     return {
@@ -87,8 +86,7 @@ const CloudScene = () => {
 
 const StarsCanvas = () => {
   // Memoize sky colors to prevent unnecessary re-renders
-  const { topColor, bottomColor, sunPosition } = useMemo(() => getSkyColor(), []);
-  console.log(topColor)
+  const { topColor } = useMemo(() => getSkyColor(), []);
   return (
     <div 
       className='w-full h-auto absolute inset-0 z-[-1]' 

@@ -17,6 +17,7 @@ const JobDetails = () => {
       })
       .then((res) => {
         setJob(res.data.job);
+        console.log(res.data.job)
       })
       .catch((error) => {
         navigateTo("/notfound");
@@ -33,7 +34,16 @@ const JobDetails = () => {
         <h3>POSITION OVERVIEW</h3>
         <div className="banner">
         <p>
-        Logo: <span> {job.companyLogo && <img src={job.companyLogo} alt="Company Logo" style={{ width: '100px', height: 'auto' }} />}</span>
+        {/* Logo: <span> {job.companyLogo && <img src={job.companyLogo} alt="Company Logo" style={{ width: '100px', height: 'auto' }} />}</span> */}
+        {job.companyLogo?.path && (
+  <img
+    src={`http://localhost:4000/${job.companyLogo.path}`}
+    width="100"
+    height="100"
+    alt={`${job.companyName} Logo`}
+  />
+)}
+
         </p>
           <p>
             Title: <span> {job.title}</span>
